@@ -180,6 +180,87 @@ BEGIN
     END LOOP; 
 END;
 
+-- Pimer 3
+DECLARE
+    TYPE T_Tab IS TABLE OF VARCHAR2(20);
+    Tab1 T_Tab := T_Tab();
+    Tab2 T_Tab := T_Tab('Janko', 'Jana');
+    i BINARY_INTEGER;
+BEGIN
+    Tab1.EXTEND(5);
+    Tab1(1) := 'Ana';
+    Tab1(3) := 'Bora';
+    -- Tab(-1) := 'Cane’; NIJE MOGU?E! Indeks ugneždenih tabela može i?i samo od 1!
+    Tab1(5) := 'Darko';
+    
+    i := Tab1.FIRST;
+    WHILE i <= Tab1.LAST LOOP
+        DBMS_OUTPUT.PUT_LINE(i || '. ' || Tab1(i));
+        i := Tab1.NEXT(i);
+    END LOOP;
+
+    i:= Tab2.FIRST;
+    WHILE i <= Tab2.LAST LOOP
+        DBMS_OUTPUT.PUT_LINE(i || '. ' || Tab2(i));
+        i := Tab2.NEXT(i);
+    END LOOP;
+END;
+
+-- Primer eksplicitno deklarisanog kursora s 
+-- parametrima i upotrebe kursorske FOR petlje.
+DECLARE
+    Ukup_Plt NUMBER;
+    CURSOR spisak_rad (D_gran radnik.Mbr%TYPE, G_gran radnik.Mbr%TYPE) IS
+    SELECT *
+    FROM radnik
+    WHERE Mbr BETWEEN D_gran AND G_gran;
+BEGIN
+    Ukup_Plt := 0;
+    FOR p_tek_red IN spisak_rad (01, 99) LOOP
+        Ukup_Plt := Ukup_Plt + p_tek_red.Plt;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('Plata je: ' || Ukup_Plt);
+END;
+
+
+/*
+Napisati PL/SQL blok koji ?e preuzeti sve torke 
+iz tabele Projekat i prebaciti ih u PL/SQL 
+tabelarnu kolekciju. Zatim ?e, redom, odštampati 
+sve elemente tako dobijene tabelarne kolekcije.
+*/
+
+DECLARE
+    CURSOR projekti IS
+    SELECT *
+    FROM Projekat;
+    
+    TYPE T_Tab is TABLE OF projekti%rowtype
+        INDEX BY BINARY_INTEGER;
+        
+    TabelarnaKolekcija T_Tab;
+    i BINARY_INTEGER := 1;
+BEGIN
+    
+    FOR P_tek_red IN projekti LOOP
+        TabelarnaKolekcija(i) := P_tek_red;
+        i := i + 1;
+    END LOOP;
+    
+    i := TabelarnaKolekcija.FIRST;
+    while i <= TabelarnaKolekcija.LAST LOOP
+        dbms_output.put_line(TabelarnaKolekcija(i).Spr || ' ' || TabelarnaKolekcija(i).Ruk || ' ' || TabelarnaKolekcija(i).Nap || ' ' || TabelarnaKolekcija(i).Nar);
+        i := TabelarnaKolekcija.NEXT(i);
+    END LOOP;
+END;
+
+
+
+
+
+
+
+
 
 
 
