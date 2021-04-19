@@ -137,11 +137,48 @@ BEGIN
     CLOSE radnici;
 END;
 
+-- Primeri upotrebe promenljivih tipa tabele
+DECLARE
+    TYPE T_Tab IS TABLE OF VARCHAR2(20) 
+        INDEX BY BINARY_INTEGER;
+    Tab T_Tab;
+    i BINARY_INTEGER;
+BEGIN
+    Tab(1) := 'DEJAN';
+    Tab(3) := 'NENAD';
+    Tab(-1) := 'MARKO';
+    Tab(5) := 'ACA';
+    Tab.DELETE(1);
+    i := Tab.FIRST;
+    WHILE i IS NOT NULL LOOP
+        DBMS_OUTPUT.PUT_LINE(i || '. ' || Tab(i));
+        i := Tab.NEXT(i);
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE(NVL(TO_CHAR(i), 'i ima NULL vrednost.'));
+END;
 
-
-
-
-
+-- Primer 2 [Zadaci ovog tipa dolaze na kolokvijum]
+DECLARE
+    TYPE T_Slog IS RECORD(
+        Naziv VARCHAR2(50),
+        BrojStudenata NUMBER := 0);
+    TYPE T_Tab IS TABLE OF T_Slog 
+        INDEX BY BINARY_INTEGER;
+    Tabela T_Tab; 
+    i BINARY_INTEGER;
+BEGIN
+    Tabela(1).Naziv := 'Napredno serversko programiranje';
+    Tabela(1).BrojStudenata := 12;
+    Tabela(2).Naziv := 'Informacioni sistemi';
+    Tabela(2).BrojStudenata := 8;
+    i := Tabela.FIRST; 
+    WHILE i <= Tabela.LAST LOOP
+        DBMS_OUTPUT.PUT('Broj studenata koji slusa predmet ');
+        DBMS_OUTPUT.PUT('"' ||Tabela(i).Naziv || '" je ');
+        DBMS_OUTPUT.PUT_LINE(Tabela(i).BrojStudenata);
+        i := Tabela.NEXT(i);
+    END LOOP; 
+END;
 
 
 
