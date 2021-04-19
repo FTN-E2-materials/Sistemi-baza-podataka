@@ -97,20 +97,3 @@ EXCEPTION
         Raise_application_error(-20000, 'Za sifru ' || '&&V_broj_projekta' || ' ne postoji projekat u nasoj bazi podataka');
 
 END;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
