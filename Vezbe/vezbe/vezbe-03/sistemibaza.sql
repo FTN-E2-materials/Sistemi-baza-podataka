@@ -62,74 +62,39 @@ Napisati PL/SQL blok koji ?e:
         Radnici kojima je sef ...
         Ime zaposlenog je ...
 */
--- Ocevidno je da se ovo dosta lakse resava preko procedure, ali u ovom trenutku je nismo radili
--- te zbog toga krsimo DRY i ponavljamo se tri puta za istu stvar ali makar koristimo isti kursor
+
+undefine sef_ime;
+undefine sef_prz;
 DECLARE
-    V_tek_red Radnik%ROWTYPE;
     V_Je_sef BOOLEAN := FALSE;
+    V_temp_ime Radnik.ime%TYPE;
+    V_temp_prz Radnik.prz%TYPE;
     
-    CURSOR radnici_sefa(V_sef_mbr Radnik.sef%TYPE) IS
-    SELECT *
-    FROM RADNIK
-    WHERE Sef = V_sef_mbr;
+    CURSOR radnici_sefa(V_sef_ime Radnik.ime%TYPE, V_sef_prz Radnik.prz%TYPE) IS
+    SELECT r1.Ime, r1.Prz
+    FROM RADNIK r1, RADNIK r2
+    WHERE r1.sef = r2.mbr and r2.Ime = V_sef_ime and r2.Prz = V_sef_prz;
     
 BEGIN
-    -- Savo Oroz sa MBR-om 70
-    OPEN radnici_sefa(70); -- Savo Oroz, MBR mu je 70
-    FETCH radnici_sefa INTO V_tek_red;
+
+    OPEN radnici_sefa('&&sef_ime','&&sef_prz'); 
+    FETCH radnici_sefa INTO V_temp_ime, V_temp_prz;
     V_Je_sef := radnici_sefa%found;
     CLOSE radnici_sefa;
     
     if V_Je_sef then
-        OPEN radnici_sefa(70); -- Savo Oroz, MBR mu je 70
-        dbms_output.put_line('Radnici kojima je sef Savo Oroz');
+        OPEN radnici_sefa('&&sef_ime','&&sef_prz'); 
+        dbms_output.put_line('Radnici kojima je sef ' || '&&sef_ime' || ' ' || '&&sef_prz');
         LOOP
-            FETCH radnici_sefa INTO V_tek_red;
+            FETCH radnici_sefa INTO V_temp_ime, V_temp_prz;
             EXIT WHEN (radnici_sefa%NOTFOUND);
-            dbms_output.put_line('Ime zaposlenog je ' || V_tek_red.Ime);
+            dbms_output.put_line('Ime zaposlenog je ' || V_temp_ime || ' ' || V_temp_prz);
         END LOOP;
         CLOSE radnici_sefa;
     else
-        dbms_output.put_line('Savo Oroz nije sef !');
+            dbms_output.put_line('Imamo situaciju da nije sef: ' || '&&sef_ime' || ' ' || '&&sef_prz');
     end if;
-    
-    -- Pera Peric sa MBR-om 10
-    OPEN radnici_sefa(10); 
-    FETCH radnici_sefa INTO V_tek_red;
-    V_Je_sef := radnici_sefa%found;
-    CLOSE radnici_sefa;
-    
-    if V_Je_sef then
-        OPEN radnici_sefa(10);
-        dbms_output.put_line('Radnici kojima je sef Pera Peric');
-        LOOP
-            FETCH radnici_sefa INTO V_tek_red;
-            EXIT WHEN (radnici_sefa%NOTFOUND);
-            dbms_output.put_line('Ime zaposlenog je ' || V_tek_red.Ime);
-        END LOOP;
-        CLOSE radnici_sefa;
-    else
-        dbms_output.put_line('Pera Peric nije sef !');
-    end if;
-    
-     -- Djoka Djokic sa MBR-om 120
-    OPEN radnici_sefa(120); 
-    FETCH radnici_sefa INTO V_tek_red;
-    V_Je_sef := radnici_sefa%found;
-    CLOSE radnici_sefa;
-    
-    if V_Je_sef then
-        OPEN radnici_sefa(120);
-        dbms_output.put_line('Radnici kojima je sef Djoka Djokic');
-        LOOP
-            FETCH radnici_sefa INTO V_tek_red;
-            EXIT WHEN (radnici_sefa%NOTFOUND);
-            dbms_output.put_line('Ime zaposlenog je ' || V_tek_red.Ime);
-        END LOOP;
-        CLOSE radnici_sefa;
-    else
-        dbms_output.put_line('Djoka Djokic nije sef !');
-    end if;
+   
 END;
 
 
