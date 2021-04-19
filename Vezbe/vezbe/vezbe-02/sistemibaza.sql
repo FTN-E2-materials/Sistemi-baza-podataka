@@ -60,13 +60,61 @@ BEGIN
     dbms_output.put_line('Izbrisano je: ' || sql%rowcount || ' torki');
 END;
 
+-- Primer petlji
+-- FOR REVERSE
+BEGIN
+    FOR i IN REVERSE 1..3 LOOP
+        DBMS_OUTPUT.PUT_LINE('Vrednost brojaca i je: ' || TO_CHAR(i));
+    END LOOP;
+END;
 
+-- FOR
+BEGIN
+    FOR i IN 1..3 LOOP
+        DBMS_OUTPUT.PUT_LINE('Vrednost brojaca i je: ' || TO_CHAR(i));
+    END LOOP;
+END;
 
+-- WHILE
+DECLARE
+    i NUMBER(1) := 1;
+BEGIN
+    WHILE i <= 3 LOOP
+        DBMS_OUTPUT.PUT_LINE('Vrednost brojaca i je: ' || TO_CHAR(i));
+        i := i + 1;
+    END LOOP;
+END;
 
+-- LOOP
+DECLARE
+    i NUMBER(1) := 1;
+BEGIN
+    LOOP
+        EXIT WHEN i > 3;
+        DBMS_OUTPUT.PUT_LINE('Vrednost brojaca i je: ' || TO_CHAR(i));
+        i := i + 1;
+    END LOOP;
+END;
 
-
-
-
+/*
+Ispisati posebno parne i posebno neparne brojeve od 1 
+do broja unetog sa tastature.
+*/
+undefine V_Br;
+DECLARE
+    V_Br NUMBER := 0;
+    i NUMBER := 1;
+BEGIN
+    WHILE i <= to_number('&&V_br') LOOP
+        if mod(i,2) = 0 then
+            dbms_output.put_line(i || ' je paran broj');
+        else
+            dbms_output.put_line(i || ' je neparan broj');
+        end if;
+        i := i + 1;
+    END LOOP;
+    
+END;
 
 
 
