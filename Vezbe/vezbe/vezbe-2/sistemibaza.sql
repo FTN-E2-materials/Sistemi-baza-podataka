@@ -53,6 +53,9 @@ DECLARE
     V_broj_projekta VARCHAR2(10) := '10';
     V_uneto_slovo VARCHAR2(1) := '';
     
+    /*Druga opcija bi bila preko torke na ovaj nacin, i kasnije mozemo da pristupamo obelezjima te torke
+        radnik_record radnik%rowtype
+    */
     V_Spr projekat.spr%TYPE := 10; -- ne moze biti null/prazno
     V_Ruk projekat.ruk%TYPE;
     V_Nap projekat.nap%TYPE;
