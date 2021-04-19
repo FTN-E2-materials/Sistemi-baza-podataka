@@ -29,12 +29,65 @@ END;
 Prebrojati projekte. Rezultat smestiti u definisanu 
 varijablu i prikazati ga u konzoli.
 */
-declare
+DECLARE
  V_br_projekata NUMBER := 0;
-begin
+BEGIN
     select count(*)
     into V_br_projekata
     from projekat;
 
     dbms_output.put_line('Broj projekata je: ' || to_char(V_br_projekata));
-end;
+END;
+
+/*
+Sa tastature uneti broj projekta. Za uneseni broj preuzeti 
+njegove podatke u posebne promenjive i prikazati ih u 
+konzoli.
+*/
+undefine V_broj_projekta;
+DECLARE
+    V_broj_projekta VARCHAR2(10) := '10';
+    
+    V_Spr projekat.spr%TYPE := 10; -- ne moze biti null/prazno
+    V_Ruk projekat.ruk%TYPE;
+    V_Nap projekat.nap%TYPE;
+    V_Nar projekat.nar%TYPE;
+BEGIN
+    dbms_output.put_line('Sifra projekta: ' || '&&V_broj_projekta');
+    if to_number('&&V_broj_projekta') = 0 then
+        raise NO_DATA_FOUND;
+    end if;
+        
+    SELECT Spr, Ruk, Nap, Nar
+    INTO V_Spr, V_Ruk, V_Nap, V_Nar
+    FROM Projekat
+    WHERE Spr = to_number('&&V_broj_projekta');
+    
+    dbms_output.put_line('***************************');
+    dbms_output.put_line('Sifra projekta: ' || to_char(V_Spr));
+    dbms_output.put_line('Sifra rukovodioca projekta: ' || to_char(V_Ruk));
+    dbms_output.put_line('Naziv projekta: ' || to_char(V_Nap));
+    dbms_output.put_line('Narucila projekta: ' || to_char(V_Nar));
+    dbms_output.put_line('***************************');
+    
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        Raise_application_error(-20000, 'Za sifru ' || '&&V_broj_projekta' || ' ne postoji projekat u nasoj bazi podataka');
+
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
