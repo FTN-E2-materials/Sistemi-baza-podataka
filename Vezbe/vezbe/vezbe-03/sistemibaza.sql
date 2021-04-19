@@ -97,7 +97,45 @@ BEGIN
    
 END;
 
+/*
+Napisati PL/SQL blok koji ?e:
+    za zadati naziv projekta, za svakog radnika koji 
+    radi na tom projektu i ima broj ?asova rada ve?i 
+    od jedan pove?ati premiju za 10 posto. Ako 
+    radnik uopšte nema premiju dati mu premiju od 
+    1000.
+*/
 
+DECLARE
+    V_temp_radnik radnik%rowtype;
+    
+    CURSOR radnici(V_Nap projekat.nap%TYPE, V_brc radproj.brc%type) IS
+    SELECT r.mbr, r.ime, r.prz, r.sef, r.plt, r.pre, r.god
+    FROM projekat p, radproj rp, radnik r
+    WHERE p.nap = V_Nap and rp.spr = p.spr and rp.mbr = r.mbr and rp.brc > V_brc;
+
+BEGIN
+    OPEN radnici('&V_in_nap',to_number('&V_in_brc'));
+    
+    LOOP
+        FETCH radnici INTO V_temp_radnik;
+        EXIT WHEN radnici%notfound;
+        
+        if V_temp_radnik.Pre is null then
+            UPDATE Radnik
+            SET Pre = 1000
+            WHERE mbr = V_temp_radnik.Mbr;
+        else
+            UPDATE Radnik
+            SET Pre = Pre + (0.1*Pre)
+            WHERE mbr = V_temp_radnik.Mbr;
+        end if;
+        
+        dbms_output.put_line(V_temp_radnik.Ime || ' ' || V_temp_radnik.Prz);
+    END LOOP;
+    
+    CLOSE radnici;
+END;
 
 
 
