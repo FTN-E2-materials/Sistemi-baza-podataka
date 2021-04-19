@@ -117,7 +117,31 @@ BEGIN
 END;
 
 
+/*
+Napisati PL/SQL blok koji ?e: 
+    • interaktivno prihvatiti vrednosti za Prz, Ime, Sef, Plt i 
+    God, (za MBR koristiti sekvencer)
+    • dodati novu torku u tabelu Radnik, s prethodno 
+    preuzetim podacima i
+    • angažovati novododatog radnika na projektu sa Spr 
+    = 10 i 5 sati rada.
+*/
+undefine V_Ime;
+undefine V_Prz;
+undefine V_Sef;
+undefine V_Plt;
+undefine V_God;
+DECLARE
+BEGIN
+    INSERT
+    INTO Radnik (Mbr, Ime, Prz, Sef, Plt, God)
+    VALUES(SEQUENCE_1.nextval, '&&V_Ime', '&&V_Prz', '&&V_Sef', '&&V_Plt', to_date('&&V_God','DD.MM.YYYY'));
 
+    INSERT
+    INTO Radproj (Spr, Mbr, Brc)
+    VALUES(10, SEQUENCE_1.currval, 5);
+
+END;
 
 
 
