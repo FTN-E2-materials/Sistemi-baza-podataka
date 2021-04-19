@@ -44,6 +44,50 @@ BEGIN
     
 END;
 
+/*
+Obrisati radnika ?iji mati?ni broj je unet preko tastature. 
+Na konzoli prikazati koliko je radnika obrisano.
+*/
+undefine V_Mbr;
+DECLARE
+    V_Mbr Number := 10;
+BEGIN
+    
+    DELETE
+    FROM RADNIK
+    WHERE Mbr = to_number('&&V_Mbr');
+    
+    dbms_output.put_line('Izbrisano je: ' || sql%rowcount || ' torki');
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
