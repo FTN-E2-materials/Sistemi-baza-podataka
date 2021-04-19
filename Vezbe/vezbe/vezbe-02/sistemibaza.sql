@@ -22,7 +22,6 @@ undefine V_Sef;
 undefine V_Plt;
 undefine V_Pre;
 undefine V_God;
-
 DECLARE
     V_Ime radnik.ime%TYPE;
     V_Prz radnik.prz%TYPE;
@@ -116,7 +115,6 @@ BEGIN
     
 END;
 
-
 /*
 Napisati PL/SQL blok koji ?e: 
     • interaktivno prihvatiti vrednosti za Prz, Ime, Sef, Plt i 
@@ -140,10 +138,45 @@ BEGIN
     INSERT
     INTO Radproj (Spr, Mbr, Brc)
     VALUES(10, SEQUENCE_1.currval, 5);
-
 END;
 
-
+/*
+Napisati PL/SQL blok koji ?e: 
+    • izbrisati angažovanje prethodno dodatog radnika na 
+    projektu sa šifrom 10 i obavestiti porukom korisnika da li 
+    je brisanje uspešno obavljeno,
+    • izbrisati prethodno dodatog radnika iz evidencije i 
+    obavestiti porukom korisnika da li je brisanje uspešno 
+    obavljeno,
+    • sa?uvati vrednost za Mbr izbrisanog radnika u lokalnoj 
+    promenljivoj pod nazivom Del_Mb
+*/
+DECLARE
+    Del_Mbr NUMBER := 10;
+BEGIN
+    Del_Mbr := SEQUENCE_1.currval; -- ovo radi ako prethodno zadatak prvo izvrsimo
+    -- pa znamo da je vrednost sekvencera stala na tom mestu
+    DELETE 
+    FROM RADPROJ
+    WHERE Spr = 10 and Mbr = Del_Mbr;
+    if sql%rowcount <> 0 then
+        dbms_output.put_line('Uspesno brisanje');
+    else
+        dbms_output.put_line('Neuspesno brisanje');
+    end if;
+    
+    DELETE
+    FROM RADNIK
+    WHERE Mbr = Del_Mbr;
+    if sql%rowcount <> 0 then
+        dbms_output.put_line('Uspesno brisanje');
+    else
+        dbms_output.put_line('Neuspesno brisanje');
+    end if;
+    
+--    Del_Mbr := SEQUENCE_1.currval;
+    
+END;
 
 
 
