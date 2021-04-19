@@ -43,10 +43,15 @@ END;
 Sa tastature uneti broj projekta. Za uneseni broj preuzeti 
 njegove podatke u posebne promenjive i prikazati ih u 
 konzoli.
+
+Takodje ispisati i projekat ciji naziv pocinje na slovo
+uneto sa prompta.
 */
 undefine V_broj_projekta;
+undefine V_uneto_slovo;
 DECLARE
     V_broj_projekta VARCHAR2(10) := '10';
+    V_uneto_slovo VARCHAR2(1) := '';
     
     V_Spr projekat.spr%TYPE := 10; -- ne moze biti null/prazno
     V_Ruk projekat.ruk%TYPE;
@@ -70,11 +75,26 @@ BEGIN
     dbms_output.put_line('Narucila projekta: ' || to_char(V_Nar));
     dbms_output.put_line('***************************');
     
+    dbms_output.put_line('Slovo: ' || '&&V_uneto_slovo');
+    
+    SELECT Spr, Ruk, Nap, Nar
+    INTO V_Spr, V_Ruk, V_Nap, V_Nar
+    FROM Projekat
+    WHERE Nap LIKE '&&V_uneto_slovo%' and rownum=1; -- posto mozemo imati vise torki koji zadovoljavaju ovaj uslov (a to je izaziva gresku, stoga stavljamo da zelimo samo jednu torku)
+    
+    dbms_output.put_line('***************************');
+    dbms_output.put_line('Sifra projekta: ' || to_char(V_Spr));
+    dbms_output.put_line('Sifra rukovodioca projekta: ' || to_char(V_Ruk));
+    dbms_output.put_line('Naziv projekta: ' || to_char(V_Nap));
+    dbms_output.put_line('Narucila projekta: ' || to_char(V_Nar));
+    dbms_output.put_line('***************************');
+    
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
         Raise_application_error(-20000, 'Za sifru ' || '&&V_broj_projekta' || ' ne postoji projekat u nasoj bazi podataka');
 
 END;
+
 
 
 
