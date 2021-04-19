@@ -25,5 +25,16 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Sada sam stariji ' || TO_CHAR(ROUND(SYSDATE - TO_DATE('&&V_datum_rodjenja', 'DD.MM.YYYY'),0)) || ' dana');
 END;
 
+/*
+Prebrojati projekte. Rezultat smestiti u definisanu 
+varijablu i prikazati ga u konzoli.
+*/
+declare
+ V_br_projekata NUMBER := 0;
+begin
+    select count(*)
+    into V_br_projekata
+    from projekat;
 
-
+    dbms_output.put_line('Broj projekata je: ' || to_char(V_br_projekata));
+end;
