@@ -178,9 +178,56 @@ BEGIN
     
 END;
 
+/*
+Kreirati tabelu Spisak_zarada, koriš?enjem SQL komande:
+    CREATE TABLE Spisak_zarada (Mbr NUMBER(3),
+    Plt NUMBER(10, 2), Evri VARCHAR2(10),
+      CONSTRAINT Sz_PK PRIMARY KEY (Mbr))
+  
+Napisati PL/SQL blok koji ?e:
+    za svaku torku iz tabele Radnik, za koju je mati?ni broj u 
+    intervalu od 10 do 100, izuzimaju?i radnika s mati?nim 
+    brojem 90, preneti u tabelu Spisak_zarada mati?ni broj, 
+    iznos plate, i inicijalizovati polje Evri sa vrednoš?u plate 
+    u evrima. Ukoliko radnik ve? postoji u tabeli izvršiti 
+    izmenu vrednosti obeležja Plt i Evri. Kurs evra treba da 
+    zadaje korisnik iz okruženja.
+*/
 
-
-
+undefine V_Plt;
+undefine V_Kurs_evra;
+DECLARE
+    V_Plt radnik.plt%TYPE;
+    i NUMBER := 10;
+    V_Kurs_evra NUMBER := 117;
+    V_Br_nadjenih_radnika NUMBER := 0;
+BEGIN
+    WHILE i <= 100 LOOP
+        if i <> 90 then
+            SELECT Plt
+            INTO V_Plt
+            FROM RADNIK
+            WHERE Mbr = i;
+            
+            SELECT Count(*)
+            INTO V_Br_nadjenih_radnika
+            FROM SPISAK_ZARADA
+            WHERE Mbr = i;
+            
+            if V_Br_nadjenih_radnika > 0 then
+                UPDATE SPISAK_ZARADA
+                SET Plt = V_Plt, Evri = V_Plt * to_number('&&V_kurs_evra')
+                WHERE Mbr = i;
+            else
+                INSERT 
+                INTO SPISAK_ZARADA(Mbr, Plt, Evri) 
+                VALUES (i, V_Plt, V_Plt * to_number('&&V_kurs_evra'));
+            end if;
+            
+        end if;
+        i := i + 10;
+    END LOOP;
+END;
 
 
 
