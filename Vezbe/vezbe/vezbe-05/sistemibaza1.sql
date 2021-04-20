@@ -100,10 +100,13 @@ DECLARE
     WHERE Ruk = P_Mbr;
     
     
-    PROCEDURE prebaci(P_TabRadnika OUT T_Radnici) IS
+    FUNCTION prebaci 
+    return T_Radnici
+    IS
         i BINARY_INTEGER;
         k BINARY_INTEGER;
         m BINARY_INTEGER;
+        P_TabRadnika T_Radnici;
     BEGIN
         i := 0;
         FOR T_Radnik in radnici LOOP
@@ -122,10 +125,11 @@ DECLARE
             
             i := i + 1;
         END LOOP;
+        return P_TabRadnika;
         
-    END;
+    END prebaci;
 BEGIN
-    prebaci(V_TabRadnika);
+    V_TabRadnika := prebaci();
     
     j := V_TabRadnika.FIRST;
     WHILE j <= V_TabRadnika.LAST LOOP
