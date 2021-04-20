@@ -1,4 +1,4 @@
-/*
+/* ZADATAK OVOG TIPA NA KOLOKVIJUMU
 Napisati PL/SQL blok koji ?e preuzeti sve torke 
 iz tabele Projekat, ure?ene u opadaju?em 
 redosledu šifri projekata, i prebaciti ih u PL/SQL 
@@ -16,7 +16,6 @@ kolekcije projekata treba prikazati mati?ne
 brojeve svih radnika koji su angažovani na tom 
 projektu.
 */
-
 DECLARE 
     -- dobavljam sve projekte
     CURSOR projekti IS
@@ -106,27 +105,51 @@ BEGIN
     dbms_output.put_line(V_Br_radnika || ' radnika nema ni najmanju ni najvecu platu');
 END;
 
+/*
+Sve radnike ?iji je mati?ni broj izme?u 1 i 99
+ozna?iti za otpuštanje dodavanjem slova X na
+kraj njihovog prezimena. Ažuriranje obaviti
+pomo?u kursorske UPDATE naredbe. Tako?e
+Izra?unati ukupnu svotu novca koja ?e biti na
+raspolaganju kompaniji na mese?nom nivou kao
+posledica njihovog otpuštanja.
 
+• Ukoliko ne postoje radnici u tom opsegu
+mati?nih brojeva, poništiti transakciju.
 
+• Testirati program i sa unosom opsega mati?nih
+brojeva sa tastature.
+*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+DECLARE
+    
+    CURSOR radnici(P_Dgran Radnik.mbr%type, P_Ggran Radnik.mbr%type) IS
+    SELECT *
+    FROM Radnik
+    WHERE mbr BETWEEN P_Dgran and P_Ggran
+    FOR UPDATE of Ime NOWAIT;
+    
+    V_Usteda NUMBER := 0;
+BEGIN
+    
+    FOR T_radnik in radnici(&A_Dgran,&A_Ggran) LOOP
+        if V_Usteda = 0 then
+            V_Usteda := 0;
+        end if;
+        
+        UPDATE Radnik
+        SET Ime = Ime || 'X'
+        WHERE CURRENT of radnici;
+        
+        V_Usteda := V_Usteda + nvl(T_radnik.plt,0) + nvl(T_radnik.pre,0);
+        
+    END LOOP;
+    
+    if V_Usteda <> 0 then
+        dbms_output.put_line('Ako firma otpusti radnike iz datog opseda, ustedice ' || V_usteda || 'din na plate i premije');
+        COMMIT;
+    else
+        dbms_output.put_line('Ne postoje radnici u tom opsegu maticnih brojeva');
+        ROLLBACK;
+    end if;
+END;
