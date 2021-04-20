@@ -253,26 +253,3 @@ BEGIN
         i := TabelarnaKolekcija.NEXT(i);
     END LOOP;
 END;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
