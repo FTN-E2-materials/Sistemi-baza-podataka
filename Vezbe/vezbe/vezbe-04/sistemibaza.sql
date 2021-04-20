@@ -84,6 +84,41 @@ BEGIN
 END;
 
 
+/*
+Napisati PL/SQL blok koji ?e prikazati koliko 
+radnika nema ni najmanju ni najve?u platu
+*/
+
+DECLARE
+    V_Max_plt NUMBER := 0;
+    V_Min_plt NUMBER := 0;
+    V_Br_radnika NUMBER := 0;
+BEGIN
+    SELECT MAX(plt), MIN(plt)
+    INTO V_Max_plt, V_Min_Plt
+    FROM RADNIK;
+    
+    SELECT Count(*)
+    INTO V_Br_radnika
+    From Radnik
+    WHERE Plt > V_Min_plt and Plt < V_Max_plt;
+    
+    dbms_output.put_line(V_Br_radnika || ' radnika nema ni najmanju ni najvecu platu');
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
