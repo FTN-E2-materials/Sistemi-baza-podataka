@@ -7,6 +7,17 @@ tabelu Radnik_JN. Za operaciju UPDATE ili
 DELETE, stare vrednosti torke se prenose u 
 tabelu Radnik_JN.
 */
+CREATE TABLE Radnik_JN
+(
+Dat DATE NOT NULL,
+Ope varchar(3) NOT NULL,
+Mbr integer NOT NULL,
+Ime varchar(20),
+Prz varchar(25),
+Plt decimal(10, 2),
+CONSTRAINT radnik_JN_PK 
+PRIMARY KEY (Dat, Ope, Mbr)
+)
 
 CREATE OR REPLACE TRIGGER RADNIK_IN_IUD 
     BEFORE
