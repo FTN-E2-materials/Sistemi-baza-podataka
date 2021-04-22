@@ -102,7 +102,47 @@ VALUES (1000, 'Jovan', 'Jovanovi', 10, 1000, 100, '01-JAN-87');
 
 
 
+/*
+Formirati paket procedura i funkcija za rad s tabelom
+Radproj. Treba obezbediti slede?u funkcionalnost, putem 
+poziva odgovaraju?ih funkcija, ili procedura:
+    – selektovanje niza torki iz tabele, saglasno zadatom kriterijumu,
+    – dodavanje niza novih torki u tabelu, koji se prenosi kao 
+    parametar,
+    – brisanje niza torki iz tabele, saglasno nizu vrednosti klju?a 
+    Spr+Mbr, koji se prenosi kao parametar,
+    – modifikacija niza torki u tabeli, saglasno nizu vrednosti klju?a 
+    Spr+Mbr i modifikovanih vrednosti, koji se prenose kao 
+    parametar.
+Korisnik treba da ima obezbe?enu indikaciju uspešnosti 
+svake od navedenih operacija.
+*/
 
+CREATE OR REPLACE PACKAGE P_RADPROJ_API IS
+    FUNCTION SEL_RADPROJ(A_Mbr IN Radproj.Mbr%type, A_Spr IN Radproj.Spr%type) RETURN RADPROJ%rowtype;
+    -- mrzi me trenutno ostale f-je da pisem, ali isti fazon... :D
+END P_RADPROJ_API;
+
+CREATE OR REPLACE PACKAGE BODY P_RADPROJ_API IS
+    FUNCTION SEL_RADPROJ(A_Mbr IN Radproj.Mbr%type, A_Spr IN Radproj.Spr%type) RETURN RADPROJ%rowtype IS
+        R_radproj radproj%rowtype;
+    BEGIN
+        SELECT *
+        INTO R_radproj
+        FROM Radproj
+        Where Mbr = A_Mbr and Spr = A_Spr;
+        
+        return R_radproj;
+    END;
+END P_RADPROJ_API;
+
+-- Testiranje paketa
+DECLARE
+    V_radproj Radproj%rowtype;
+BEGIN
+    V_radproj := P_RADPROJ_API.SEL_RADPROJ(10,10);
+    dbms_output.put_line('Dati radnik je angazovan na tom projektu ' || V_radproj.Brc || ' sati');
+END;
 
 
 
